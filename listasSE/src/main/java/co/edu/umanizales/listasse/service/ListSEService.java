@@ -36,8 +36,5 @@ public class ListSEService {
         kids.addToStart(kid);
     }
 
-    public void addToFinal(Kid kid){
-        kids.addToFinal(kid);
-    }
 
 }

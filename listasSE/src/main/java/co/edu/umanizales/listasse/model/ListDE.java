@@ -357,6 +357,59 @@ public class ListDE {
         this.head = listCP.getHead();
     }
 
+    /**
+     *
+     * El código implementa el método deletePetByIdKamikaze que se encarga de eliminar un nodo de la lista doblemente enlazada. Aquí está una explicación detallada del código:
+     * 1.	Primero, se verifica si la lista no está vacía (this.head != null).
+     * 2.	Si la lista no está vacía, se comprueba si la mascota a eliminar se encuentra en la cabeza de la lista (this.head).
+     * •	Si el código de la mascota en la cabeza de la lista coincide con el código proporcionado (this.head.getDataDE().getCodePet().equals(code)), se realiza lo siguiente:
+     * •	Si existe un siguiente nodo después de la cabeza de la lista (this.head.getNextDE() != null), se establece la referencia previous de ese siguiente nodo en null.
+            Esto asegura que el siguiente nodo se convierta en la nueva cabeza de la lista y se mantiene la integridad de los enlaces.
+     * •	Se actualiza la cabeza de la lista (this.head) para que apunte al siguiente nodo (this.head = this.head.getNextDE()), eliminando así la mascota que coincide con el código proporcionado.
+     * •	Se retorna de inmediato (return), ya que se ha eliminado la mascota y no es necesario continuar con el resto del método.
+     * 3.	Si la mascota a eliminar no está en la cabeza de la lista, se realiza un recorrido por la lista utilizando un bucle while que se ejecuta mientras temp no sea nulo.
+     * •	Dentro del bucle, se verifica si la mascota almacenada en el nodo temp coincide con el código proporcionado.
+     * •	Si hay coincidencia, se realiza lo siguiente:
+     * •	Se actualizan las referencias previous y nextDE de los nodos adyacentes a temp para eliminar temp de la lista.
+     * •	Se establecen las referencias previous y nextDE de temp en null, eliminando así todas las conexiones del nodo.
+     * •	Se retorna de inmediato (return), ya que se ha eliminado la mascota y no es necesario continuar con el resto del método.
+     * •	Si no hay coincidencia, se pasa al siguiente nodo de la lista (temp = temp.getNextDE()) y se continúa el bucle.
+     * 4.	Si se completa el bucle sin encontrar la mascota a eliminar, se lanza una excepción ListSEException con un mensaje indicando que el código proporcionado no existe en la lista.
+     * 5.	Si la lista está vacía, se lanza una excepción ListSEException con un mensaje indicando que no hay datos en la lista.
+     */
+
+    public void deletePetByIdKamikaze(String code) throws ListSEException {
+        if (this.head != null) {
+            if (this.head.getDataDE().getCodePet().equals(code)) {
+                if (this.head.getNextDE() != null) {
+                    this.head.getNextDE().setPrevious(null);
+                }
+                this.head = this.head.getNextDE();
+                return;
+            } else {
+                NodeDE temp = this.head;
+                while (temp != null) {
+                    if (temp.getDataDE().getCodePet().equals(code)) {
+                        if (temp.getPrevious() != null) {
+                            temp.getPrevious().setNextDE(temp.getNextDE());
+                        }
+                        if (temp.getNextDE() != null) {
+                            temp.getNextDE().setPrevious(temp.getPrevious());
+                        }
+                        temp.setPrevious(null);
+                        temp.setNextDE(null);
+                        return;
+                    }
+                    temp = temp.getNextDE();
+                }
+                throw new ListSEException("El código " + code + " no existe en la lista");
+            }
+        } else {
+            throw new ListSEException("No hay datos en la lista");
+        }
+    }
+
+
 }
 
 

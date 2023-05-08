@@ -195,5 +195,20 @@ public class ListDEController {
         }
     }
 
+    @GetMapping(path = "/deletepetKamikaze/{code}")
+    public ResponseEntity<ResponseDTO> deletePetByIdKamikaze(@PathVariable String code)  {
+        try {
+            listDEService.deletePetByIdentification(code);
+            return new ResponseEntity<>(new ResponseDTO(
+                    200, "Las mascotas con el código" + code + "han sido eliminados.",
+                    null), HttpStatus.OK);
+        } catch (ListSEException e) {
+            return new ResponseEntity<>(new ResponseDTO(
+                    500, "Error al eliminar las mascotas.",
+                    null), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
 }
