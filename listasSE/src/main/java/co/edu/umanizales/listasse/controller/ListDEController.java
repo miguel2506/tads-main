@@ -1,6 +1,7 @@
 package co.edu.umanizales.listasse.controller;
 
 import co.edu.umanizales.listasse.controller.dto.PetsByLocationDTO;
+import co.edu.umanizales.listasse.controller.dto.PetsDTO;
 import co.edu.umanizales.listasse.controller.dto.ReportPetsDTO;
 import co.edu.umanizales.listasse.controller.dto.ResponseDTO;
 import co.edu.umanizales.listasse.exception.ListDEException;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,6 +165,24 @@ public class ListDEController {
         }
     }
 
+    @PostMapping
+    public ResponseEntity<ResponseDTO> addPet(@RequestBody @Valid PetsDTO petDTO) {
+        LocationPets locationPets = locationPetsService.getLocationsPetsByCode(petDTO.getCodeLocationPet());
+        if (locationPets == null) {
+            return new ResponseEntity<>(new ResponseDTO(
+                    404, "La ubicación no existe ", null), HttpStatus.OK);
+        } try {
+            listDEService.getPets().addPet(new Pet(petDTO.getIdentificationPet(),
+                    petDTO.getGenderPet(), petDTO.getAgePet(),
+                    petDTO.getNamePet(), locationPets));
+        } catch (ListDEException e) {
+            return new ResponseEntity<>(new ResponseDTO(
+                    409, "Ya existe una mascota con ese código", null
+            ), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(new ResponseDTO(
+                200, "Se ha añadido.", null), HttpStatus.OK);
+}
     @GetMapping(path = "/petsbylocationgenders/{age}")
     public ResponseEntity<ResponseDTO> getReportPetsLocationGenders(@PathVariable byte age) {
         ReportPetsDTO reportPets =
@@ -172,7 +192,7 @@ public class ListDEController {
                 200, reportPets,null),HttpStatus.OK);
     }
 
-    //Método que me permita decirle a un niño determinado que adelante un numero de posiciones dadas
+    //Método que me permita decirle a una mascota determinado que adelante un numero de posiciones dadas
     @GetMapping(path="/passpetspositions/{positions}")
     public ResponseEntity<ResponseDTO> passByPosition(@PathVariable String identification, int positions) {
         try {
@@ -184,7 +204,7 @@ public class ListDEController {
         }
     }
 
-    //Método que me permita decirle a un niño determinado que pierda un numero de posiciones dadas
+    //Método que me permita decirle a una mascota determinado que pierda un numero de posiciones dadas
     @GetMapping(path="/afterwardspetspositions/{positions}")
     public ResponseEntity<ResponseDTO> afterwardsPositions(@PathVariable String identification, int positions) {
         try {

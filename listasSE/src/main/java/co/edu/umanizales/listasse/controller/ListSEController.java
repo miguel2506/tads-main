@@ -195,7 +195,7 @@ public class ListSEController {
         }
     }
 
-    @GetMapping("/addtostart")
+    @GetMapping("/addtostart/{kid}")
     public ResponseEntity<ResponseDTO> addToStart(@RequestBody Kid kid) throws ListSEException {
         listSEService.addToStart(kid);
         return new ResponseEntity<>(new ResponseDTO(
